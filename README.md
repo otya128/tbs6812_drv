@@ -32,4 +32,4 @@ recdvb --dev 0 26 - terr-26ch.ts
 
 `DELIVERY_SYSTEM = ISDBS`かつ`STREAM_ID`が8未満のときISDB-Sの相対TS番号で選局されます。
 
-`DELIVERY_SYSTEM = ISDBS`かつ`STREAM_ID`の下位16ビット部の上位4ビットが0xbまたは0xcのとき (0xbXXX, 0xcXXXX) ISDB-S3のストリームIDで選局、それ以外のときISDB-SのTSIDで選局されます。
+`DELIVERY_SYSTEM = ISDBS`かつ`STREAM_ID`の下位16ビット部の上位4ビットが0xbまたは0xcのとき (0xbXXX, 0xcXXX) ISDB-S3のストリームIDで選局、それ以外のときISDB-SのTSIDで選局されます。
