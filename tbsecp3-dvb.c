@@ -61,6 +61,7 @@ struct sec_priv {
 	int (*set_voltage)(struct dvb_frontend *fe,
 			   enum fe_sec_voltage voltage);
 };
+#ifdef TBS_DVB_EXTENSION
 static void ecp3_spi_read(struct i2c_adapter *i2c,u8 reg, u32 *buf)
 {	
 	struct tbsecp3_i2c *i2c_adap = i2c_get_adapdata(i2c);
@@ -175,7 +176,7 @@ static int tbs6302se_read_mac(struct tbsecp3_adapter *adap)
 		//printk(" the receiver always busy !\n");
 		//check mcu status
 		*(u32 *)tmpbuf = tbs_read( BASE_ADDRESS_24CXX,  STATUS_MAC16_24CXX );
-		if((tmpbuf[0]&0x4) == 1) // bit2==1 mcu busy
+		if((tmpbuf[0]&0x4) == 0x4) // bit2==1 mcu busy
 		{
 			//printk("MCU status is busy!!!\n" );
 			// release cs;
@@ -243,7 +244,7 @@ static int tbs6304_read_mac(struct tbsecp3_adapter *adap)
 		//printk(" the receiver always busy !\n");
 		//check mcu status
 		*(u32 *)tmpbuf = tbs_read( BASE_ADDRESS_24CXX,  STATUS_MAC16_24CXX );
-		if((tmpbuf[0]&0x4) == 1) // bit2==1 mcu busy
+		if((tmpbuf[0]&0x4) == 0x4) // bit2==1 mcu busy
 		{
 			//printk("MCU status is busy!!!\n" );
 			// release cs;
@@ -278,6 +279,7 @@ static int tbs6304_read_mac(struct tbsecp3_adapter *adap)
 
 	return ret;
 };
+#endif
 static void tbs_write_ext(struct tbsecp3_adapter *adap, u32 baseaddr, u8 address, u32 data)
 {
     struct tbsecp3_dev *dev = adap->dev;
@@ -317,9 +319,9 @@ static u32 tbs_read_ext(struct tbsecp3_adapter *adap, u32 baseaddr, u8 address)
     return tbs_read(0x1000,4);
 }
 
+#ifdef TBS_DVB_EXTENSION
 static int tbs6308_read_mac_ext(struct tbsecp3_adapter *adap)
 {
-	struct tbsecp3_dev *dev = adap->dev;
 	int ret = 1;
 	int i =0;
 	u32 postaddr;
@@ -349,7 +351,7 @@ static int tbs6308_read_mac_ext(struct tbsecp3_adapter *adap)
 		ret = 0;
 		//check mcu status
 		*(u32 *)tmpbuf = tbs_read_ext(adap, BASE_ADDRESS_24CXX,  STATUS_MAC16_24CXX );
-		if((tmpbuf[0]&0x4) == 1) // bit2==1 mcu busy
+		if((tmpbuf[0]&0x4) == 0x4) // bit2==1 mcu busy
 		{
 			//printk("MCU status is busy!!!\n" );
 			// release cs;
@@ -412,7 +414,7 @@ static void tbs6301_read_mac(struct tbsecp3_adapter *adap)
 		printk(" the receiver always busy !\n");
 		//check mcu status
 		*(u32 *)tmpbuf = tbs_read( BASE_ADDRESS_24CXX,  STATUS_MAC16_24CXX );
-		if((tmpbuf[0]&0x4) == 1) // bit2==1 mcu busy
+		if((tmpbuf[0]&0x4) == 0x4) // bit2==1 mcu busy
 		{
 			printk("MCU status is busy!!!\n" );
 			// release cs;
@@ -443,6 +445,7 @@ static void tbs6301_read_mac(struct tbsecp3_adapter *adap)
 
 	return ;
 };
+#endif
 
 
 static int tbsecp3_set_voltage(struct dvb_frontend* fe,
@@ -493,6 +496,7 @@ static void tbsecp3_release_sec(struct dvb_frontend* fe)
 	kfree(priv);
 }
 
+#ifdef TBS_DVB_EXTENSION
 static struct dvb_frontend *tbsecp3_attach_sec(struct tbsecp3_adapter *adap, struct dvb_frontend *fe)
 {
 	struct sec_priv *priv;
@@ -510,6 +514,7 @@ static struct dvb_frontend *tbsecp3_attach_sec(struct tbsecp3_adapter *adap, str
 
 	return fe;
 }
+#endif
 
 static int set_mac_address(struct tbsecp3_adapter *adap)
 {
@@ -567,6 +572,7 @@ static int stop_feed(struct dvb_demux_feed *dvbdmxfeed)
 	return 0;
 }
 
+#ifdef TBS_DVB_EXTENSION
 static void reset_demod(struct tbsecp3_adapter *adapter)
 {
 	struct tbsecp3_dev *dev = adapter->dev;
@@ -580,7 +586,6 @@ static void reset_demod(struct tbsecp3_adapter *adapter)
 }
 
 
-#ifdef TBS_DVB_EXTENSION
 static struct tas2101_config tbs6902_demod_cfg[] = {
 	{
 		.i2c_address   = 0x60,
@@ -1426,6 +1431,7 @@ static void tbs_octuples_reset_demod(struct tbsecp3_adapter *adapter)
 	tbs_write(TBSECP3_GPIO_BASE, gpio, tmp);
 	msleep(50);
 }
+#ifdef TBS_DVB_EXTENSION
 static u32 tbs_FPGA_fireware_info(struct tbsecp3_adapter *adapter)
 {
 	struct tbsecp3_dev *dev = adapter->dev;
@@ -1465,12 +1471,13 @@ static void tbs6590se_reset_demod(struct tbsecp3_adapter *adapter) //for the cxd
 	
 	return ;
 }
+#endif
 static int tbsecp3_frontend_attach(struct tbsecp3_adapter *adapter)
 {
 	struct tbsecp3_dev *dev = adapter->dev;
+#ifdef TBS_DVB_EXTENSION
 	struct pci_dev *pci = dev->pci_dev;
 
-#ifdef TBS_DVB_EXTENSION
 	struct si2168_config si2168_config;
 	struct si2183_config si2183_config;
 	struct si2157_config si2157_config;
@@ -1479,10 +1486,12 @@ static int tbsecp3_frontend_attach(struct tbsecp3_adapter *adapter)
 	struct mtv23x_config mtv23x_config;
 	struct gx1503_config gx1503_config;
 	struct m88rs6060_cfg m88rs6060_config;
-#endif
 	struct i2c_board_info info;
+#endif
 	struct i2c_adapter *i2c = &adapter->i2c->i2c_adap;
+#ifdef TBS_DVB_EXTENSION
 	struct i2c_client *client_demod, *client_tuner;
+#endif
 
 	adapter->fe = NULL;
 	adapter->fe2 = NULL;

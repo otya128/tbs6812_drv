@@ -77,7 +77,6 @@ int asi_read16bit(struct tbsecp3_dev *dev,int asi_base_addr,int reg_addr)
 bool asi_write16bit(struct tbsecp3_dev *dev,int asi_base_addr, int reg_addr, int data16bit)
 {
 	unsigned char tmpbuf[4];
-	int regData;
 
 	tmpbuf[0] = (unsigned char) (reg_addr>>8)&0xff; //read_address, msb first;
 	tmpbuf[1] = (unsigned char)(reg_addr&0xff);

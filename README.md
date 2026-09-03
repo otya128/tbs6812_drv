@@ -5,9 +5,9 @@ ISDB-T/ISDB-S/ISDB-S3対応Linux向けTBS6812 a.k.a. PT4Kドライバ
 カーネルモジュールのビルド環境を構築後、dkmsでインストールします。
 
 ```sh
-sudo cp -a ./ /usr/src/tbs6812_drv-0.0.1
-sudo dkms add tbs6812_drv/0.0.1
-sudo dkms install tbs6812_drv/0.0.1
+sudo cp -a ./ /usr/src/tbs6812_drv-0.2.0
+sudo dkms add tbs6812_drv/0.2.0
+sudo dkms autoinstall tbs6812_drv/0.2.0
 ```
 
 DVBデバイスとして見えるのでdvb-toolsなどを導入するとストリームを得ることができます。
